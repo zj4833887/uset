@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加文章</title>
+    <link rel="stylesheet" href="_LAYUI_css/layui.css">
+</head>
+<body>
+<form class="layui-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">分类id</label>
+        <div class="layui-input-block">
+            <select name="cid" lay-filter="aihao">
+                {volist name="nav" id="item"}
+                <option value="{$item.nid}" {$item.nid==$data.cid?"selected":''}>{$item.name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">分类名称</label>
+        <div class="layui-input-block">
+            <input type="text" value="{$data.anames}" name="anames" lay-verify="anames" autocomplete="off" placeholder="请输入导航名称" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">英文名称</label>
+        <div class="layui-input-block">
+            <input type="text" value="{$data.nename}" name="nename" lay-verify="nename" autocomplete="off" placeholder="请输入导航英文名称" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">文章内容</label>
+        <div class="layui-input-block">
+            <textarea id="content"  style="display: none;">
+                {$data.content}
+            </textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+    <input type="hidden" name="id" value="{$data.id}">
+<!--    <input type="hidden" name="content" value="{$data.content}">-->
+</form>
+<script src="_LAYUI_layui.js"></script>
+</body>
+</html>
+<script>
+    layui.use(['upload','layer','form','layedit'], function(){
+        let {upload,layer,$,form,layedit}=layui;
+        //执行实例
+        layedit.set({
+            uploadImage: {
+                url: '_URL_base/load' //接口url
+                ,type: 'post' //默认post
+            }
+        });
+        //定义富文本编辑器的值
+        let index=layedit.build('content');
+        //提交数据
+        form.on('submit(formDemo)', function(data){
+            var arr=data.field;
+            delete arr['file'];
+            arr.content=layedit.getContent(index);
+            $.ajax({
+                url:'_URL_artical/update',
+                type:'post',
+                data:arr,
+                success:function (res) {
+                    let {code,msg}=res;
+                    if (code==200){
+                        layer.msg(msg);
+                    }else {
+                        layer.msg(msg);
+                    }
+                }
+            });
+            return false;
+        })
+    });
+</script>

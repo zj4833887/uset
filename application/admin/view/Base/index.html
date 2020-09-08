@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/uset/public/static/layui/css/layui.css">
+    <style>
+        .layui-elem-quote>img{
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+<form class="layui-form" action="">
+    <div class="layui-form-item">
+        <label class="layui-form-label">网站标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" value="{$data.title}" required  lay-verify="required" placeholder="请输入网站标题" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">网站关键词</label>
+        <div class="layui-input-block">
+            <input type="text" name="keywords" value="{$data.keywords}" required  lay-verify="required" placeholder="请输入网站关键词" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">网站简介</label>
+        <div class="layui-input-block">
+            <input type="text" name="desc" value="{$data.desc}" required  lay-verify="required" placeholder="请输入网站关键词" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">网站logo</label>
+        <div class="layui-input-block">
+            <blockquote class="layui-elem-quote">
+                图片预览<br>
+                <input type="hidden" name="src" value="{$data.logo}">
+                <img id="thumb"  src="{$data.logo}" alt="">
+            </blockquote>
+            <button type="button" class="layui-btn" id="test1">
+                <i class="layui-icon">&#xe67c;</i>上传图片
+            </button>
+        </div>
+    </div>
+    <input type="hidden" name="logo" id="logo">
+    <input type="hidden" name="id" value="{$data.id}">
+    <div class="layui-form-item">
+        <label class="layui-form-label">网站地址</label>
+        <div class="layui-input-block">
+            <input type="text" name="address" value="{$data.address}" required  lay-verify="required" placeholder="请输入网站关键词" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">电话</label>
+        <div class="layui-input-block">
+            <input type="text" name="phone" value="{$data.phone}" required  lay-verify="required" placeholder="请输入网站关键词" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">邮箱</label>
+        <div class="layui-input-block">
+            <input type="text" name="email" value="{$data.email}" required  lay-verify="required" placeholder="请输入网站关键词" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">版权</label>
+        <div class="layui-input-block">
+            <input type="text" name="copyright" value="{$data.copyright}" required  lay-verify="required" placeholder="请输入网站关键词" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+        </div>
+    </div>
+</form>
+<script src="/uset/public/static/layui/layui.js"></script>
+</body>
+</html>
+<script>
+    layui.use(['upload','layer','form'], function(){
+        let {upload,layer,$,form}=layui;
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#test1' //绑定元素
+            ,url: '/uset/public/admin/Base/upload' //上传接口
+            ,done: function(res){
+                //上传完毕回调
+                let {code,msg}=res;
+                if (code==200){
+                    layer.msg(msg);
+                    $("#thumb").attr('src',res.url);
+                    $("#logo").val(res.url);
+                }else {
+                }
+            }
+            ,error: function(){
+                //请求异常回调
+            }
+        });
+        form.on('submit(formDemo)', function(data){
+            $.ajax({
+                url:'/uset/public/admin/Base/query',
+                type:'post',
+                dataType:'json',
+                data:data.field,
+                success:function (res) {
+                    console.log(res);
+                }
+            });
+            return false;
+        });
+    });
+</script>

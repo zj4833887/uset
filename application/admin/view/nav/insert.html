@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加导航</title>
+    <link rel="stylesheet" href="/uset/public/static/layui/css/layui.css">
+    <style>
+        .layui-elem-quote{
+            width: 84%;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+<form class="layui-form" action="">
+    <div class="layui-form-item">
+        <label class="layui-form-label">导航名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" lay-verify="title" autocomplete="off" placeholder="请输入导航名称" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">英文名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="ename" lay-verify="title" autocomplete="off" placeholder="请输入导航英文名称" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">导航路径</label>
+        <div class="layui-input-block">
+            <input type="text" name="template" lay-verify="title" autocomplete="off" placeholder="请输入导航路径" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序规则</label>
+        <div class="layui-input-block">
+            <input type="text" name="sort" lay-verify="title" autocomplete="off" placeholder="请输入导航顺序" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">图片上传</label>
+        <div class="layui-upload">
+            <button type="button" class="layui-btn" id="test1">上传图片</button>
+            <blockquote class="layui-elem-quote">
+                <div class="layui-upload-list">
+                    <img style="width: 200px;height: 100px" class="layui-upload-img" id="logo">
+                    <p id="demoText"></p>
+                </div>
+            </blockquote>
+        </div>
+    </div>
+    <input type="hidden" name="thumb" id="thumb">
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<script src="/uset/public/static/layui/layui.js"></script>
+</body>
+</html>
+<script>
+    layui.use(['upload','layer','form'], function(){
+        let {upload,layer,$,form}=layui;
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#test1' //绑定元素
+            ,url: '/uset/public/admin/Base/upload' //上传接口
+            ,done: function(res){
+                //上传完毕回调
+                let {code,msg}=res;
+                if (code==200){
+                    layer.msg(msg);
+                    $("#logo").attr('src',res.url);
+                    $("#thumb").val(res.url);
+                }else {
+                }
+            }
+            ,error: function(){
+                //请求异常回调
+            }
+        });
+        form.on('submit(formDemo)', function(data){
+            $.ajax({
+                url:'/uset/public/admin/Nav/create',
+                type:'post',
+                dataType:'json',
+                data:data.field,
+                success:function (res) {
+                    let {code,msg}=res;
+                    if (code==200){
+                        layer.msg(msg);
+                        location.href="/uset/public/admin/Nav/index";
+                    } else {
+                        layer.msg(msg)
+                    }
+                }
+            });
+            return false;
+        });
+    });
+</script>

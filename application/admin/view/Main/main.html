@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>layout 后台大布局 - Layui</title>
+    <link rel="stylesheet" href="/uset/public/static/layui/css/layui.css">
+    <style>
+        .layui-body{
+            width: 100%;
+            height: 100%;
+        }
+        .layui-tab-item{
+            width: 100%;
+            height: 538px;
+        }
+        iframe{
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">layui 后台布局</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a href="">控制台</a></li>
+            <li class="layui-nav-item"><a href="">商品管理</a></li>
+            <li class="layui-nav-item"><a href="">用户</a></li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">其它系统</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">邮件管理</a></dd>
+                    <dd><a href="">消息管理</a></dd>
+                    <dd><a href="">授权管理</a></dd>
+                </dl>
+            </li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+<!--                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img">-->
+                    {$username}
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">基本资料</a></dd>
+                    <dd><a href="">安全设置</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="/uset/public/admin/login/loginout">退了</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+                <li class="layui-nav-item">
+                    <a class="" href="javascript:;">导航管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-url="_URL_Nav/insert" class="add" data-id="11">添加导航</a></dd>
+                        <dd><a href="javascript:;" data-url="_URL_Nav/index" class="add" data-id="12">查看导航</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a class="" href="javascript:;">分类管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-url="_URL_Category/insert" class="add" data-id="21">添加分类</a></dd>
+                        <dd><a href="javascript:;" data-url="_URL_Category/index" class="add" data-id="22">查看分类</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a class="" href="javascript:;">单页管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-url="_URL_Artical/insert" class="add" data-id="31">添加单页</a></dd>
+                        <dd><a href="javascript:;" data-url="_URL_Artical/index" class="add" data-id="32">查看单页</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a class="" href="javascript:;">服务管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-url="_URL_service/insert" class="add" data-id="41">添加服务</a></dd>
+                        <dd><a href="javascript:;" data-url="_URL_service/index" class="add" data-id="42">查看服务</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a class="" href="javascript:;">产品管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-url="_URL_product/insert" class="add" data-id="51">添加产品</a></dd>
+                        <dd><a href="javascript:;" data-url="_URL_product/index" class="add" data-id="52">查看产品</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div style="padding: 15px;">
+            <div class="layui-tab" lay-allowClose="true" lay-filter="test">
+                <ul class="layui-tab-title">
+                    <li class="layui-this" lay-id="00">网站设置</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <iframe src="/uset/public/admin/Base/index" frameborder="0"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © layui.com - 底部固定区域
+    </div>
+</div>
+<script src="/uset/public/static/layui/layui.js"></script>
+<script>
+    //JavaScript代码区域
+    layui.use('element', function(){
+        let {element,$}=layui;
+        //选项卡
+        $('.add').click(function () {
+            //获取lis
+            let title=$(this).html();
+            let id=$(this).data('id');
+            let url=$(this).data('url');
+            let lis=$('.layui-tab-title>li');
+            let ids=lis.map(function (index,ele) {
+                return ele.getAttribute("lay-id")
+            });
+            ids=Array.from(ids);
+            let flag=ids.some(function (ele) {
+                return ele==id;
+            });
+            if (flag){
+                element.tabChange('test', id);
+            } else {
+                element.tabAdd('test', {
+                    title: title
+                    ,content: "<iframe src="+url+" frameborder=\"0\"></iframe>" //支持传入html
+                    ,id: id
+                });
+                element.tabChange('test', id);
+            }
+
+
+        })
+    });
+</script>
+</body>
+</html>
